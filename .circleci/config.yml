@@ -3,26 +3,43 @@ version: 2.1
 workflows:
   main:
     jobs:
-      - test-plain
-      - test-cloudsmith
+      - node-plain
+      - node-cloudsmith
+      - go-plain
+      - go-cloudsmith
 
 jobs:
-  test-plain:
+  node-plain:
     executor: node
     parallelism: 5
     steps:
       - run: |
           npm config set //registry.npmjs.org/:_authToken=$NPM_TOKEN
-      - setup
+      - setup-node
 
-  test-cloudsmith:
+  node-cloudsmith:
     executor: node
     parallelism: 5
     steps:
       - run: |
           npm config set registry https://npm.cloudsmith.io/circleci-wkop/npm/
           npm config set //npm.cloudsmith.io/circleci-wkop/npm/:_authToken=$CLOUDSMITH_TOKEN
-      - setup
+      - setup-node
+
+  go-plain:
+    executor: go
+#    parallelism: 5
+    steps:
+      - setup-go
+
+  go-cloudsmith:
+    executor: go
+    parallelism: 5
+    steps:
+      - run:
+          name: configure cloudsmith
+          command: echo 'export GOPROXY="https://token:$CLOUDSMITH_TOKEN_GO@golang.cloudsmith.io/circleci-wkop/go-mods/,direct"' >> "$BASH_ENV"
+      - setup-go
 
 executors:
   node:
@@ -31,8 +48,14 @@ executors:
     working_directory: /mnt/ramdisk
     resource_class: large
 
+  go:
+    docker:
+      - image: cimg/go:1.25
+    working_directory: /mnt/ramdisk
+    resource_class: large
+
 commands:
-  setup:
+  setup-node:
     steps:
       - checkout
       - run:
@@ -41,3 +64,13 @@ commands:
       - run:
           name: Install dependencies
           command: pnpm install --frozen-lockfile
+
+  setup-go:
+    steps:
+      - checkout
+      - run:
+          name: Setup Go private repo access for backplane-go
+          command: git config --global url."https://$GITHUB_USER:$GITHUB_TOKEN@github.com/circleci/".insteadOf "https://github.com/circleci/"
+      - run:
+          name: Install dependencies
+          command: go mod download
