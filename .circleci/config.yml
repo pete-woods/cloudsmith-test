@@ -45,13 +45,13 @@ executors:
   node:
     docker:
       - image: cimg/node:22.20.0
-    working_directory: /mnt/ramdisk
+#    working_directory: /mnt/ramdisk
     resource_class: large
 
   go:
     docker:
       - image: cimg/go:1.25
-    working_directory: /mnt/ramdisk
+#    working_directory: /mnt/ramdisk
     resource_class: large
 
 commands:
