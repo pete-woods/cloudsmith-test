@@ -28,7 +28,7 @@ jobs:
 
   go-plain:
     executor: go
-#    parallelism: 5
+    parallelism: 5
     steps:
       - setup-go
 
