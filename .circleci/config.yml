@@ -47,13 +47,13 @@ executors:
   node:
     docker:
       - image: cimg/node:22.20.0
-#    working_directory: /mnt/ramdisk
+    working_directory: /mnt/ramdisk
     resource_class: large
 
   go:
     docker:
       - image: cimg/go:1.25
-#    working_directory: /mnt/ramdisk
+    working_directory: /mnt/ramdisk
     resource_class: large
 
 commands:
@@ -75,4 +75,4 @@ commands:
           command: git config --global url."https://$GITHUB_USER:$GITHUB_TOKEN@github.com/circleci/".insteadOf "https://github.com/circleci/"
       - run:
           name: Install dependencies
-          command: go mod download
+          command: go mod download -x
