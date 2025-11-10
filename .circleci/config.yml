@@ -35,8 +35,6 @@ jobs:
   go-cloudsmith:
     executor: go
     parallelism: 5
-    environment:
-      GONOSUBDB: 'golang.cloudsmith.io'
     steps:
       - run:
           name: configure cloudsmith
@@ -75,4 +73,4 @@ commands:
           command: git config --global url."https://$GITHUB_USER:$GITHUB_TOKEN@github.com/circleci/".insteadOf "https://github.com/circleci/"
       - run:
           name: Install dependencies
-          command: go mod download -x
+          command: go mod download
