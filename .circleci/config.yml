@@ -35,6 +35,8 @@ jobs:
   go-cloudsmith:
     executor: go
     parallelism: 5
+    environment:
+      GONOSUBDB: 'golang.cloudsmith.io'
     steps:
       - run:
           name: configure cloudsmith
